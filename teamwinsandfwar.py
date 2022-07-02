@@ -9,7 +9,7 @@ Quick code if you want to see the correlation between total Team Wins and fWAR.
 Thank you to the pybaseball folks for putting this package together.
 You can play around with dates all you want, this one defaults to just the 2021 season.
 One little quirk, Total Team WAR was added to the Team Batting Stats DataFrame. 
-Unfortunately I'm not THAT good at Pandas so it's just for conveinence sake.
+Unfortunately I'm not THAT good with pandas so it's just for conveinence sake.
 Another quirk, this does not include partial seasons, so players who have been traded aren't totaled in Team WAR (fine).
 This unfortunately leads to a problem of running this for multiple seasons though (not fine).
 In the process of testing what works for mutliple seasons so someone like Mookie Betts doesn't get lost.
