@@ -22,15 +22,16 @@ pd.set_option('display.max_columns', None)
 pd.set_option('chained_assignment', None)
 
 import pybaseball as pyb
+
+# Group all batters by Team and by fWAR
 df_2021 = pyb.batting_stats(2021, qual=0)
-df_2021.groupby('Team')['WAR'].sum().head(5)
-df_2021.groupby('Team')
 df_2021.groupby('Team')['WAR'].sum().sort_values(ascending=False)
 
+# Group all pitchers by Team and by fWAR
 df_2021_pitch = pyb.pitching_stats(2021, qual=0)
-df_2021_pitch.groupby('Team')['WAR'].sum().head(5)
-df_2021_pitch.groupby('Team')
 df_2021_pitch.groupby('Team')['WAR'].sum().sort_values(ascending=False)
+
+# Currently pulls top 4, change n-value to whatever you'd like (1 for the best player, 9 for the top 9, etc.
 
 team_batting_war_2021 = df_2021.groupby('Team')['WAR'].apply(lambda group: group.nlargest(4).sum())
 team_batting_war_2021 = team_batting_war_2021.reset_index()
@@ -40,6 +41,8 @@ team_pitching_war_2021 = df_2021_pitch.groupby('Team')['WAR'].apply(lambda group
 team_pitching_war_2021 = team_pitching_war_2021.reset_index()
 team_pitching_war_2021 = team_pitching_war_2021.loc[team_pitching_war_2021['Team'] != '- - -']
 
+# Obnoxiously Total fWAR (pitchers and batters combine) lives in the batting WAR DataFrame.
+
 team_batting_war_2021['Total fWAR'] = team_batting_war_2021['WAR'] + team_pitching_war_2021['WAR']
 
 standings = pyb.standings(2021)
@@ -47,7 +50,8 @@ wins = pd.DataFrame()
 for division_df in standings:
     wins = pd.concat([wins, division_df])
     
-# Standings are full team name
+# Standings are full team name, this changes them to abbreviations so standings and WAR can be matched with the correct team.
+
 wins = wins.rename({'Tm': 'Team'}, axis=1)
 wins.iloc[0, 0] = 'TBR'
 wins.iloc[1, 0] = 'BOS'
@@ -121,10 +125,6 @@ for _, row in team_batting_war_2021.iterrows():
 columns = ['WAR', 'W']
 for column in columns:
     team_pitching_war_2021[column] = team_pitching_war_2021[column].astype(float)
-    
-from matplotlib import pyplot as plt
-import numpy as np
-import seaborn as sns; sns.set_style('whitegrid');
 
 x = team_pitching_war_2021['WAR']
 y = team_pitching_war_2021['W']
@@ -153,10 +153,6 @@ for _, row in team_pitching_war_2021.iterrows():
 columns = ['Total fWAR', 'W']
 for column in columns:
     team_batting_war_2021[column] = team_batting_war_2021[column].astype(float)
-
-from matplotlib import pyplot as plt
-import numpy as np
-import seaborn as sns; sns.set_style('whitegrid');
 
 x = team_batting_war_2021['Total fWAR']
 y = team_batting_war_2021['W']
