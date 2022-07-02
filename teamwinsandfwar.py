@@ -51,6 +51,7 @@ for division_df in standings:
     wins = pd.concat([wins, division_df])
     
 # Standings are full team name, this changes them to abbreviations so standings and WAR can be matched with the correct team.
+# When you change the season you will unfortunately need to double check the standings in the team columns and match location to abbreviations. Annoying I know.
 
 wins = wins.rename({'Tm': 'Team'}, axis=1)
 wins.iloc[0, 0] = 'TBR'
