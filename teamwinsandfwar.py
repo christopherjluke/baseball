@@ -4,6 +4,15 @@
 Created on Fri Jul  1 19:49:26 2022
 
 @author: christopherluke
+
+Quick code if you want to see the correlation between total Team Wins and fWAR.
+Thank you to the pybaseball folks for putting this package together.
+You can play around with dates all you want, this one defaults to just the 2021 season.
+One little quirk, Total Team WAR was added to the Team Batting Stats DataFrame. 
+Unfortunately I'm not THAT good at Pandas so it's just for conveinence sake.
+Another quirk, this does not include partial seasons, so players who have been traded aren't totaled in Team WAR (fine).
+This unfortunately leads to a problem of running this for multiple seasons though (not fine).
+In the process of testing what works for mutliple seasons so someone like Mookie Betts doesn't get lost.
 """
 
 import pandas as pd
@@ -37,7 +46,8 @@ standings = pyb.standings(2021)
 wins = pd.DataFrame()
 for division_df in standings:
     wins = pd.concat([wins, division_df])
-
+    
+# Standings are full team name
 wins = wins.rename({'Tm': 'Team'}, axis=1)
 wins.iloc[0, 0] = 'TBR'
 wins.iloc[1, 0] = 'BOS'
@@ -138,7 +148,7 @@ sns.regplot(data = team_pitching_war_2021, x='WAR', y='W');
 for _, row in team_pitching_war_2021.iterrows():
     ax.annotate(row['Team'], xy=(row['WAR'], row['W']))
     
-# Total team WAR
+# Total Team WAR
 
 columns = ['Total fWAR', 'W']
 for column in columns:
